@@ -1,0 +1,54 @@
+package org.civicsolve.challenge.dto;
+
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * CivicSolve — Challenge Intake Data Transfer Object
+ * Used for submitting new civic reports with location coordinates and metadata.
+ */
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChallengeIntakeDTO {
+
+    @NotBlank(message = "Title is required")
+    @Size(max = 255, message = "Title must not exceed 255 characters")
+    private String title;
+
+    @NotBlank(message = "Description is required")
+    private String description;
+
+    @NotNull(message = "Latitude is required")
+    @DecimalMin(value = "-90.0", message = "Latitude must be >= -90.0")
+    @DecimalMax(value = "90.0", message = "Latitude must be <= 90.0")
+    private Double lat;
+
+    @NotNull(message = "Longitude is required")
+    @DecimalMin(value = "-180.0", message = "Longitude must be >= -180.0")
+    @DecimalMax(value = "180.0", message = "Longitude must be <= 180.0")
+    private Double lon;
+
+    @NotBlank(message = "District is required")
+    @Size(max = 100, message = "District must not exceed 100 characters")
+    private String district;
+
+    @Size(max = 150, message = "Village or ward must not exceed 150 characters")
+    private String villageOrWard;
+
+    @PositiveOrZero(message = "Reported population must be zero or positive")
+    private Integer reportedPopulation;
+
+    private String domain;
+
+    private String subDomain;
+}

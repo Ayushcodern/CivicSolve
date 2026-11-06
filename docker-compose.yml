@@ -1,0 +1,105 @@
+# ============================================================
+# CivicSolve — Docker Compose (Local Development)
+# ============================================================
+# Usage:
+#   docker compose up -d          # Start all services
+#   docker compose down           # Stop all services
+#   docker compose logs -f        # Follow logs
+# ============================================================
+
+services:
+  # ── 1. PostgreSQL + PostGIS ──────────────────────────────────
+  postgres-postgis:
+    image: postgis/postgis:16-3.4
+    container_name: civicsolve-db
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-civicsolve}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-civicsolve}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - civicsolve-network
+
+  # ── 2. FastAPI AI Microservice ───────────────────────────────
+  fastapi-ai:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: civicsolve-ai
+    restart: unless-stopped
+    ports:
+      - "${AI_PORT:-8000}:8000"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-civicsolve}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_HOST: postgres-postgis
+      POSTGRES_PORT: 5432
+    depends_on:
+      postgres-postgis:
+        condition: service_healthy
+    networks:
+      - civicsolve-network
+
+  # ── 3. Spring Boot Backend ───────────────────────────────────
+  spring-boot-api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: civicsolve-api
+    restart: unless-stopped
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-civicsolve}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_HOST: postgres-postgis
+      POSTGRES_PORT: 5432
+      JWT_SECRET: ${JWT_SECRET:-civicsolve_super_secret_jwt_key_2026_at_least_256_bits_long}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-86400000}
+      AI_SERVICE_URL: http://fastapi-ai:8000
+    depends_on:
+      postgres-postgis:
+        condition: service_healthy
+      fastapi-ai:
+        condition: service_started
+    networks:
+      - civicsolve-network
+
+  # ── 4. Vite React Frontend ──────────────────────────────────
+  frontend:
+    build:
+      context: "./dummy frontend"
+      dockerfile: Dockerfile
+    container_name: civicsolve-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api/v1}
+    volumes:
+      - "./dummy frontend/src:/app/src"       # Hot-reload: mount source code
+      - "./dummy frontend/public:/app/public" # Hot-reload: mount public assets
+    networks:
+      - civicsolve-network
+
+# ── Shared Network ──────────────────────────────────────────
+networks:
+  civicsolve-network:
+    driver: bridge
+
+# ── Named Volumes ───────────────────────────────────────────
+volumes:
+  pgdata:
+    driver: local

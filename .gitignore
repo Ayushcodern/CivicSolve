@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Java build output
+target/
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# Build outputs & deployment
+.vercel/
+.output/
+dist/
+
+.vercel
