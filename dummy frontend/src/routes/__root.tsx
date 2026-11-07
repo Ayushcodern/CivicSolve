@@ -83,14 +83,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CivicSolve — Societal Challenge Exchange" },
-      { name: "description", content: "Citizen problems to university–industry solutions." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "CivicSolve — Societal Challenge Exchange" },
-      { property: "og:description", content: "Citizen problems to university–industry solutions." },
+      { title: "CivicSolve मध्य प्रदेश — जन समस्या समाधान मंच" },
+      { name: "description", content: "मध्य प्रदेश के गाँवों व शहरों की समस्याओं को सीधे कॉलेज व शासन से जोड़कर समाधान निकालने का मंच।" },
+      { name: "author", content: "Government of Madhya Pradesh" },
+      { property: "og:title", content: "CivicSolve मध्य प्रदेश — जन समस्या समाधान मंच" },
+      { property: "og:description", content: "मध्य प्रदेश के गाँवों व शहरों की समस्याओं को सीधे कॉलेज व शासन से जोड़कर समाधान निकालने का मंच।" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -99,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&family=IBM+Plex+Mono:wght@400;500;600&family=Fragment+Mono:ital@0;1&family=Noto+Sans+Devanagari:wght@400;600&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),

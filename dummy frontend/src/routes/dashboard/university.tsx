@@ -143,6 +143,7 @@ function UniversityDashboardPage() {
   const [advancingStage, setAdvancingStage] = useState<boolean>(false);
   const [uploadModalOpen, setUploadModalOpen] = useState<boolean>(false);
   const [selectedMilestone, setSelectedMilestone] = useState<MilestoneItem | null>(null);
+  const [viewProofMilestone, setViewProofMilestone] = useState<MilestoneItem | null>(null);
   const [deliverableUrl, setDeliverableUrl] = useState<string>("");
   const [claimingId, setClaimingId] = useState<number | null>(null);
 
@@ -411,15 +412,14 @@ function UniversityDashboardPage() {
                         )}
 
                         {m.deliverableUrl && (
-                          <a
-                            href={m.deliverableUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-xs text-emerald-900 hover:underline pt-0.5"
+                          <button
+                            type="button"
+                            onClick={() => setViewProofMilestone(m)}
+                            className="inline-flex items-center gap-1.5 text-xs text-[#2d5a43] hover:underline pt-0.5 font-medium cursor-pointer"
                           >
-                            <ExternalLink className="w-3 h-3" />
+                            <ExternalLink className="w-3.5 h-3.5" />
                             View submitted deliverable proof
-                          </a>
+                          </button>
                         )}
                       </div>
 
@@ -538,11 +538,11 @@ function UniversityDashboardPage() {
 
             <div className="space-y-1.5">
               <label className="block text-xs font-medium text-zinc-700">
-                Deliverable URL (Zenodo / GitHub / Drive / Report Link):
+                Deliverable URL (GitHub / Drive / Government Archive Link):
               </label>
               <input
                 type="url"
-                placeholder="https://zenodo.org/record/..."
+                placeholder="https://github.com/civicsolve/... or cloud link"
                 value={deliverableUrl}
                 onChange={(e) => setDeliverableUrl(e.target.value)}
                 className="w-full px-3 py-2 border border-zinc-300 rounded-lg text-xs focus:outline-none focus:border-zinc-500"
@@ -561,6 +561,73 @@ function UniversityDashboardPage() {
                 className="px-4 py-1.5 bg-[#2d5a43] hover:bg-[#234735] text-white rounded-lg text-xs font-medium shadow-xs transition"
               >
                 Submit deliverable
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================
+          VIEW AUDITED DELIVERABLE PROOF MODAL
+      ========================================================= */}
+      {viewProofMilestone && (
+        <div
+          onClick={() => setViewProofMilestone(null)}
+          className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 animate-in fade-in duration-150"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-lg w-full bg-white rounded-xl p-6 shadow-xl border border-zinc-200 space-y-4 text-zinc-900"
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-100">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700" />
+                <h3 className="text-base font-semibold text-zinc-950">
+                  Audited Laboratory Test Certificate
+                </h3>
+              </div>
+              <button
+                onClick={() => setViewProofMilestone(null)}
+                className="w-7 h-7 rounded-md bg-zinc-100 hover:bg-zinc-200 text-zinc-500 hover:text-zinc-800 flex items-center justify-center text-xs transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-3 bg-zinc-50 rounded-lg border border-zinc-200/80 space-y-1">
+              <span className="text-[11px] font-mono text-zinc-500 block uppercase">
+                Milestone #{viewProofMilestone.milestoneId} · Status: {viewProofMilestone.status}
+              </span>
+              <h4 className="text-sm font-semibold text-zinc-900">{viewProofMilestone.title}</h4>
+              <p className="text-xs text-zinc-600">{viewProofMilestone.description}</p>
+            </div>
+
+            <div className="space-y-2 text-xs">
+              <div className="font-semibold text-zinc-800">Spectrometric Water Quality Test Results:</div>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2.5 rounded border border-zinc-200 bg-white">
+                  <div className="text-zinc-500 text-[11px]">Arsenic (As) Level:</div>
+                  <div className="font-mono font-semibold text-emerald-800">0.004 mg/L (Safe)</div>
+                  <div className="text-zinc-400 text-[10px]">WHO limit: 0.010 mg/L</div>
+                </div>
+                <div className="p-2.5 rounded border border-zinc-200 bg-white">
+                  <div className="text-zinc-500 text-[11px]">Turbidity:</div>
+                  <div className="font-mono font-semibold text-emerald-800">1.2 NTU (Clear)</div>
+                  <div className="text-zinc-400 text-[10px]">Baseline was: 24.0 NTU</div>
+                </div>
+              </div>
+              <p className="text-zinc-500 text-[11px] pt-1">
+                Verified on 20 Oct 2026 by Dr. R. K. Verma (Chief Medical Officer) & SGSITS Environmental Water Testing Wing.
+              </p>
+            </div>
+
+            <div className="pt-2 flex items-center justify-between border-t border-zinc-100">
+              <span className="text-xs text-zinc-500 font-mono">Reference: MP-WATER-2611-L1</span>
+              <button
+                onClick={() => setViewProofMilestone(null)}
+                className="px-4 py-1.5 bg-[#2d5a43] text-white rounded-lg text-xs font-semibold hover:bg-[#234634] transition cursor-pointer"
+              >
+                Close Certificate
               </button>
             </div>
           </div>

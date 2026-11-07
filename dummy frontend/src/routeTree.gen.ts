@@ -15,8 +15,10 @@ import { Route as SubmitRouteImport } from './routes/submit'
 import { Route as ChallengesIndexRouteImport } from './routes/challenges/index'
 import { Route as ChallengesIdRouteImport } from './routes/challenges/$id'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardAdminRouteImport } from './routes/dashboard/admin'
 import { Route as DashboardCitizenRouteImport } from './routes/dashboard/citizen'
 import { Route as DashboardGovernmentRouteImport } from './routes/dashboard/government'
+import { Route as DashboardIndustryRouteImport } from './routes/dashboard/industry'
 import { Route as DashboardModeratorRouteImport } from './routes/dashboard/moderator'
 import { Route as DashboardUniversityRouteImport } from './routes/dashboard/university'
 import { Route as InstitutionsIndexRouteImport } from './routes/institutions/index'
@@ -55,6 +57,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/dashboard/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardAdminRoute = DashboardAdminRouteImport.update({
+  id: '/dashboard/admin',
+  path: '/dashboard/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardCitizenRoute = DashboardCitizenRouteImport.update({
   id: '/dashboard/citizen',
   path: '/dashboard/citizen',
@@ -63,6 +70,11 @@ const DashboardCitizenRoute = DashboardCitizenRouteImport.update({
 const DashboardGovernmentRoute = DashboardGovernmentRouteImport.update({
   id: '/dashboard/government',
   path: '/dashboard/government',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndustryRoute = DashboardIndustryRouteImport.update({
+  id: '/dashboard/industry',
+  path: '/dashboard/industry',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardModeratorRoute = DashboardModeratorRouteImport.update({
@@ -106,8 +118,10 @@ export interface FileRoutesByFullPath {
   '/impact': typeof ImpactRoute
   '/submit': typeof SubmitRoute
   '/challenges/$id': typeof ChallengesIdRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/dashboard/government': typeof DashboardGovernmentRoute
+  '/dashboard/industry': typeof DashboardIndustryRoute
   '/dashboard/moderator': typeof DashboardModeratorRoute
   '/dashboard/university': typeof DashboardUniversityRoute
   '/roles/citizen': typeof RolesCitizenRoute
@@ -123,8 +137,10 @@ export interface FileRoutesByTo {
   '/impact': typeof ImpactRoute
   '/submit': typeof SubmitRoute
   '/challenges/$id': typeof ChallengesIdRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/dashboard/government': typeof DashboardGovernmentRoute
+  '/dashboard/industry': typeof DashboardIndustryRoute
   '/dashboard/moderator': typeof DashboardModeratorRoute
   '/dashboard/university': typeof DashboardUniversityRoute
   '/roles/citizen': typeof RolesCitizenRoute
@@ -141,8 +157,10 @@ export interface FileRoutesById {
   '/impact': typeof ImpactRoute
   '/submit': typeof SubmitRoute
   '/challenges/$id': typeof ChallengesIdRoute
+  '/dashboard/admin': typeof DashboardAdminRoute
   '/dashboard/citizen': typeof DashboardCitizenRoute
   '/dashboard/government': typeof DashboardGovernmentRoute
+  '/dashboard/industry': typeof DashboardIndustryRoute
   '/dashboard/moderator': typeof DashboardModeratorRoute
   '/dashboard/university': typeof DashboardUniversityRoute
   '/roles/citizen': typeof RolesCitizenRoute
@@ -160,8 +178,10 @@ export interface FileRouteTypes {
     | '/impact'
     | '/submit'
     | '/challenges/$id'
+    | '/dashboard/admin'
     | '/dashboard/citizen'
     | '/dashboard/government'
+    | '/dashboard/industry'
     | '/dashboard/moderator'
     | '/dashboard/university'
     | '/roles/citizen'
@@ -177,8 +197,10 @@ export interface FileRouteTypes {
     | '/impact'
     | '/submit'
     | '/challenges/$id'
+    | '/dashboard/admin'
     | '/dashboard/citizen'
     | '/dashboard/government'
+    | '/dashboard/industry'
     | '/dashboard/moderator'
     | '/dashboard/university'
     | '/roles/citizen'
@@ -194,8 +216,10 @@ export interface FileRouteTypes {
     | '/impact'
     | '/submit'
     | '/challenges/$id'
+    | '/dashboard/admin'
     | '/dashboard/citizen'
     | '/dashboard/government'
+    | '/dashboard/industry'
     | '/dashboard/moderator'
     | '/dashboard/university'
     | '/roles/citizen'
@@ -212,8 +236,10 @@ export interface RootRouteChildren {
   ImpactRoute: typeof ImpactRoute
   SubmitRoute: typeof SubmitRoute
   ChallengesIdRoute: typeof ChallengesIdRoute
+  DashboardAdminRoute: typeof DashboardAdminRoute
   DashboardCitizenRoute: typeof DashboardCitizenRoute
   DashboardGovernmentRoute: typeof DashboardGovernmentRoute
+  DashboardIndustryRoute: typeof DashboardIndustryRoute
   DashboardModeratorRoute: typeof DashboardModeratorRoute
   DashboardUniversityRoute: typeof DashboardUniversityRoute
   RolesCitizenRoute: typeof RolesCitizenRoute
@@ -269,6 +295,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/admin': {
+      id: '/dashboard/admin'
+      path: '/dashboard/admin'
+      fullPath: '/dashboard/admin'
+      preLoaderRoute: typeof DashboardAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard/citizen': {
       id: '/dashboard/citizen'
       path: '/dashboard/citizen'
@@ -281,6 +314,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard/government'
       fullPath: '/dashboard/government'
       preLoaderRoute: typeof DashboardGovernmentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/industry': {
+      id: '/dashboard/industry'
+      path: '/dashboard/industry'
+      fullPath: '/dashboard/industry'
+      preLoaderRoute: typeof DashboardIndustryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/moderator': {
@@ -340,8 +380,10 @@ const rootRouteChildren: RootRouteChildren = {
   ImpactRoute: ImpactRoute,
   SubmitRoute: SubmitRoute,
   ChallengesIdRoute: ChallengesIdRoute,
+  DashboardAdminRoute: DashboardAdminRoute,
   DashboardCitizenRoute: DashboardCitizenRoute,
   DashboardGovernmentRoute: DashboardGovernmentRoute,
+  DashboardIndustryRoute: DashboardIndustryRoute,
   DashboardModeratorRoute: DashboardModeratorRoute,
   DashboardUniversityRoute: DashboardUniversityRoute,
   RolesCitizenRoute: RolesCitizenRoute,

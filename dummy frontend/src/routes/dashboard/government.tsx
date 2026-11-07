@@ -147,7 +147,7 @@ function GovernmentDashboardPage() {
       // Render District Heat Circles
       districts.forEach((d) => {
         const isHighRisk = d.avgPriorityScore >= 80;
-        const color = isHighRisk ? "#ef4444" : d.avgPriorityScore >= 70 ? "#f59e0b" : "#10b981";
+        const color = isHighRisk ? "#b91c1c" : d.avgPriorityScore >= 70 ? "#d97706" : "#2d5a43";
         const radius = Math.max(16, Math.min(36, d.challengeCount * 1.2));
 
         const circle = leafletLib.circleMarker([d.centerLat, d.centerLon], {

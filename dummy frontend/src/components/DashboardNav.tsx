@@ -43,20 +43,20 @@ export const DashboardNav: React.FC = () => {
       {/* ====================================================================
           DESKTOP & MOBILE TOP HEADER
           ==================================================================== */}
-      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-zinc-200 text-zinc-900 shadow-2xs">
+      <header className="sticky top-0 z-30 bg-white border-b border-zinc-200 text-zinc-900 shadow-2xs">
         <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="flex items-center justify-between h-16 sm:h-18">
             {/* Logo & Subtitle */}
             <div className="flex items-center gap-3">
               <Link to="/" className="flex items-center gap-2.5 group">
-                <span className="grid h-9 w-9 place-items-center rounded-xl bg-zinc-950 text-white font-mono font-bold text-sm shadow-xs group-hover:bg-emerald-900 transition">
+                <span className="grid h-9 w-9 place-items-center rounded-xl bg-[#2d5a43] text-white font-mono font-bold text-sm shadow-xs group-hover:bg-[#234634] transition">
                   C
                 </span>
                 <div>
                   <span className="text-lg sm:text-xl font-bold tracking-tight text-zinc-950 block leading-tight">
                     CivicSolve
                   </span>
-                  <span className="text-[11px] text-zinc-500 font-medium hidden sm:block">
+                  <span className="text-xs text-zinc-500 font-medium hidden sm:block">
                     {t.govBadge}
                   </span>
                 </div>
@@ -73,7 +73,7 @@ export const DashboardNav: React.FC = () => {
                     : "text-zinc-600 hover:text-zinc-950 hover:bg-zinc-50"
                 }`}
               >
-                <Sparkles className="w-4 h-4 text-zinc-500" />
+                <FileText className="w-4 h-4 text-zinc-500" />
                 <span>{t.navProblems}</span>
               </Link>
 
@@ -200,7 +200,7 @@ export const DashboardNav: React.FC = () => {
           ==================================================================== */}
       <nav
         aria-label="Mobile Navigation"
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/98 backdrop-blur-md border-t border-zinc-200/90 shadow-2xl px-2 py-1.5"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-zinc-200 shadow-xl px-2 py-1.5"
       >
         <div className="grid grid-cols-4 items-center max-w-md mx-auto">
           {/* 1. Home */}

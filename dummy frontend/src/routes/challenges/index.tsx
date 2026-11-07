@@ -288,7 +288,7 @@ function ChallengesExplorerPage() {
                     <div className="space-y-2.5">
                       {/* Top: Complaint ID and Status */}
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-mono text-[11px] font-medium text-zinc-500">
+                        <span className="font-mono text-xs font-semibold text-zinc-600">
                           #MP-CIVIC-{String(item.challengeId).padStart(4, "0")}
                         </span>
                         <span

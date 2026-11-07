@@ -107,7 +107,7 @@ const FALLBACK_CHALLENGE: ChallengeData = {
   subDomain: "Groundwater Contaminant Mitigation & Bio-Filtration",
   priorityScore: 88.5,
   priorityExplanation:
-    "Calculated via Formula: Severity (0.88 * 0.35) + Population Log Factor (3500 pop -> 0.886 * 0.25) + Recurrence (0.90 * 0.20) + Health Hazard (0.95 * 0.20). Severe toxic heavy metal exposure directly impacting community health with chronic recurrence.",
+    "गाँव के 3,500 निवासियों के स्वास्थ्य व पीने के पानी पर सीधा असर होने तथा त्वचा रोग के मामलों के कारण इसे अति-आवश्यक प्राथमिकता दी गई है। (Direct severe drinking water toxicity and health hazard impacting 3,500 residents).",
   status: "AI_ANALYZED",
   lat: 22.9734,
   lon: 75.8321,
@@ -250,10 +250,7 @@ function ChallengeDetailPage() {
             priorityScore: Number(storeItem.priorityScore),
           });
         } else {
-          setChallenge({
-            ...FALLBACK_CHALLENGE,
-            challengeId: numericId,
-          });
+          setChallenge(null);
         }
       }
     }
@@ -441,28 +438,39 @@ function ChallengeDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6">
-        <Loader2 className="w-10 h-10 text-emerald-600 animate-spin mb-4" />
-        <h2 className="text-lg font-semibold text-slate-800">Loading Challenge Dossier...</h2>
-        <p className="text-sm text-slate-500">Querying PostGIS geo-index and AI verification pipeline...</p>
+      <div className="min-h-screen bg-[#fbfbfa] flex flex-col items-center justify-center p-6 text-center">
+        <Loader2 className="w-8 h-8 text-[#2d5a43] animate-spin mb-3" />
+        <h2 className="text-base font-semibold text-zinc-900">
+          {lang === "hi" ? "समस्या का विवरण लोड हो रहा है..." : "Loading problem details..."}
+        </h2>
       </div>
     );
   }
 
   if (!challenge) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 text-center">
-        <AlertTriangle className="w-12 h-12 text-amber-500 mb-3" />
-        <h2 className="text-xl font-bold text-slate-800">Challenge Not Found</h2>
-        <p className="text-sm text-slate-600 mb-6 max-w-md">
-          The requested challenge ID could not be located in the CivicSolve database.
-        </p>
-        <Link
-          to="/"
-          className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl font-medium shadow hover:bg-emerald-700 transition"
-        >
-          Return to Dashboard
-        </Link>
+      <div className="min-h-screen bg-[#fbfbfa] flex flex-col justify-between">
+        <DashboardNav />
+        <div className="max-w-md mx-auto my-auto text-center px-4 py-16">
+          <div className="w-12 h-12 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center mx-auto mb-4">
+            <AlertTriangle className="w-6 h-6 text-zinc-600" />
+          </div>
+          <h2 className="text-xl font-bold text-zinc-950">
+            {lang === "hi" ? "समस्या नहीं मिली (404)" : "Problem Not Found (404)"}
+          </h2>
+          <p className="text-sm text-zinc-600 mt-2 mb-6">
+            {lang === "hi"
+              ? "यह समस्या दर्ज नहीं है या हटाई जा चुकी है। कृपया अन्य समस्याएँ देखें।"
+              : "This problem reference does not exist or has been removed. Please browse other community reports."}
+          </p>
+          <Link
+            to="/challenges"
+            className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl bg-[#2d5a43] text-white text-sm font-semibold hover:bg-[#234634] transition min-h-[44px]"
+          >
+            {lang === "hi" ? "दर्ज समस्याएँ देखें" : "Browse Problems"}
+          </Link>
+        </div>
+        <Footer />
       </div>
     );
   }
@@ -993,7 +1001,7 @@ function ChallengeDetailPage() {
       {selectedPhoto && (
         <div
           onClick={() => setSelectedPhoto(null)}
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4 sm:p-6"
         >
           <div
             onClick={(e) => e.stopPropagation()}
@@ -1016,7 +1024,7 @@ function ChallengeDetailPage() {
       {formulaModalOpen && (
         <div
           onClick={() => setFormulaModalOpen(false)}
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4"
         >
           <div
             onClick={(e) => e.stopPropagation()}

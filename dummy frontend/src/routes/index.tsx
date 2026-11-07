@@ -340,7 +340,7 @@ function IndexPage() {
                   <div className="space-y-3">
                     {/* Top Row: Ref number & Status Badge */}
                     <div className="flex items-center justify-between text-xs">
-                      <span className="font-mono text-[11px] font-medium text-zinc-500">
+                      <span className="font-mono text-xs font-semibold text-zinc-600">
                         #{item.id}
                       </span>
                       <span
@@ -526,7 +526,7 @@ function IndexPage() {
                   <div className="text-xs text-zinc-500 line-clamp-2">
                     {lang === "hi" ? college.focusHi : college.focusEn}
                   </div>
-                  <div className="text-[11px] font-medium text-zinc-600 pt-1">
+                  <div className="text-xs font-medium text-zinc-600 pt-1">
                     {lang === "hi" ? college.cityHi : college.cityEn}
                   </div>
                 </div>

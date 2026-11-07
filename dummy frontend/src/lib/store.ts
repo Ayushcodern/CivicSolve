@@ -15,14 +15,14 @@ export interface Challenge {
   priorityScore: number;
   priorityExplanation?: string;
   status:
-    | "SUBMITTED"
-    | "AI_ANALYZED"
-    | "VALIDATED"
-    | "MATCHED"
-    | "IN_PROGRESS"
-    | "RESOLVED"
-    | "REJECTED"
-    | "MERGED";
+  | "SUBMITTED"
+  | "AI_ANALYZED"
+  | "VALIDATED"
+  | "MATCHED"
+  | "IN_PROGRESS"
+  | "RESOLVED"
+  | "REJECTED"
+  | "MERGED";
   lat: number;
   lon: number;
   district: string;
@@ -109,7 +109,7 @@ const INITIAL_CHALLENGES: Challenge[] = [
     subDomain: "Groundwater Contaminant Mitigation & Bio-Filtration",
     priorityScore: 88.5,
     priorityExplanation:
-      "Formula Rationale: Severity (0.88 * 0.35) + Population Log Factor (3500 pop -> 0.886 * 0.25) + Recurrence (0.90 * 0.20) + Health Hazard (0.95 * 0.20). Severe toxic heavy metal exposure directly impacting community health with chronic recurrence.",
+      "गाँव के 3,500 निवासियों के स्वास्थ्य व पीने के पानी पर सीधा असर होने तथा त्वचा रोग के मामलों के कारण इसे अति-आवश्यक प्राथमिकता दी गई है। (Direct severe drinking water toxicity and health hazard impacting 3,500 residents).",
     status: "AI_ANALYZED",
     lat: 22.9734,
     lon: 75.8321,
@@ -134,7 +134,7 @@ const INITIAL_CHALLENGES: Challenge[] = [
     subDomain: "Rural Connectivity, All-Weather Slab Culvert & Slope Stabilization",
     priorityScore: 76.2,
     priorityExplanation:
-      "Formula Rationale: Severity (0.75 * 0.35) + Population Log Factor (2100 pop -> 0.825 * 0.25) + Recurrence (0.95 * 0.20) + Health Hazard (0.50 * 0.20). Critical arterial disconnection impacting school attendance and healthcare transit.",
+      "बारिश में 2,100 ग्रामीणों व स्कूल के बच्चों का मुख्य मार्ग पूरी तरह कट जाने और एम्बुलेंस न पहुँच पाने के कारण इसे उच्च प्राथमिकता दी गई है। (Crucial road connection severed, blocking ambulances and 320 daily students during monsoon).",
     status: "MATCHED",
     lat: 23.0245,
     lon: 75.2415,
@@ -164,7 +164,7 @@ const INITIAL_CHALLENGES: Challenge[] = [
     subDomain: "Micro-Composting Units & Decentralized Solid Waste Segregation",
     priorityScore: 68.4,
     priorityExplanation:
-      "Formula Rationale: Severity (0.65 * 0.35) + Population Factor (4200 pop -> 0.91 * 0.25) + Recurrence (0.85 * 0.20) + Health Hazard (0.70 * 0.20). Environmental sanitation risk with open leachate percolation.",
+      "साप्ताहिक हाट बाज़ार के कचरे से पास के तालाब में गंदगी व बीमारियाँ फैलने का जोखिम होने से इसे प्राथमिकता में लिया गया है। (Environmental health hazard and groundwater contamination from unmanaged market waste).",
     status: "IN_PROGRESS",
     lat: 22.5539,
     lon: 75.7612,
@@ -193,7 +193,7 @@ const INITIAL_CHALLENGES: Challenge[] = [
     subDomain: "Integrated Pest Management (IPM) & Bio-Formulation Spray Pilot",
     priorityScore: 84.1,
     priorityExplanation:
-      "Formula Rationale: Severity (0.85 * 0.35) + Population (1850 farming households -> 0.81 * 0.25) + Recurrence (0.75 * 0.20) + Economic Hazard (0.90 * 0.20). Critical agricultural livelihood impact with rapid spatial spread.",
+      "450 हेक्टेयर में सोयाबीन फ़सल पर पीला मोज़ेक वायरस का तेज़ी से फैलाव और 1,850 किसान परिवारों के आर्थिक नुकसान को रोकने हेतु उच्च प्राथमिकता। (Severe agricultural threat threatening crop yields across 1,850 farm households).",
     status: "VALIDATED",
     lat: 21.8234,
     lon: 75.6189,
@@ -216,7 +216,7 @@ const INITIAL_CHALLENGES: Challenge[] = [
     subDomain: "Solar-Assisted Cold Chain Infrastructure & Remote Telemetry",
     priorityScore: 92.8,
     priorityExplanation:
-      "Formula Rationale: Severity (0.95 * 0.35) + Population (5400 tribal residents -> 0.94 * 0.25) + Recurrence (0.90 * 0.20) + Health Hazard (0.95 * 0.20). Extreme maternal and child public health risk; irreversible loss of temperature-sensitive biologics.",
+      "14 आदिवासी मजरों के 5,400 लोगों के लिए टीकों के खराब होने के खतरे को देखते हुए इसे सर्वोच्च प्राथमिकता दी गई है। (Maternal and child health hazard from power outages risking critical vaccine supply).",
     status: "RESOLVED",
     lat: 21.9324,
     lon: 74.8921,
@@ -245,7 +245,7 @@ const INITIAL_CHALLENGES: Challenge[] = [
     subDomain: "Structural Health Audit & Waterproofing Polymer Rehabilitation",
     priorityScore: 64.0,
     priorityExplanation:
-      "Formula Rationale: Severity (0.65 * 0.35) + Population (450 students -> 0.65 * 0.25) + Recurrence (0.70 * 0.20) + Safety Hazard (0.75 * 0.20). Structural integrity risk directly above active student classrooms.",
+      "कक्षा 3 और 4 की छत पर सीधे 50,000 लीटर पानी की टंकी का रिसाव होने से 450 छात्राओं की सुरक्षा हेतु तुरंत मरम्मत की आवश्यकता है। (Structural danger of water tank leakage directly over classrooms serving 450 students).",
     status: "VALIDATED",
     lat: 22.9676,
     lon: 76.0534,
@@ -268,7 +268,7 @@ const INITIAL_CHALLENGES: Challenge[] = [
     subDomain: "Distribution Grid Voltage Stabilization & Smart Reactive Power",
     priorityScore: 78.9,
     priorityExplanation:
-      "Formula Rationale: Severity (0.80 * 0.35) + Population (1200 farm holdings -> 0.78 * 0.25) + Recurrence (0.95 * 0.20) + Economic Hazard (0.85 * 0.20). Direct damage to agricultural assets and irrigation failure during germination season.",
+      "सिंचाई के मुख्य समय में वोल्टेज 160V गिरने से 42 मोटरें जल चुकी हैं, जिससे 1,200 किसानों की फ़सल सूखने का जोखिम है। (Critical voltage drop causing pump motor burnouts across 1,200 farms).",
     status: "SUBMITTED",
     lat: 23.2032,
     lon: 77.0844,
@@ -289,7 +289,7 @@ const INITIAL_CHALLENGES: Challenge[] = [
     subDomain: "Groundwater Fluoride Removal & Community Defluoridation Units",
     priorityScore: 89.2,
     priorityExplanation:
-      "Formula Rationale: Severity (0.92 * 0.35) + Population (2800 residents -> 0.86 * 0.25) + Recurrence (0.95 * 0.20) + Pediatric Health Hazard (0.95 * 0.20). Irreversible pediatric skeletal and dental damage.",
+      "हैंडपंप के पानी में फ्लोराइड 3.4 mg/L मिलने से 2,800 ग्रामीणों व 180 बच्चों में दाँत व हड्डियों की बीमारी रोकने हेतु तत्काल फ़िल्टर की ज़रूरत है। (Dangerous fluoride level 3.4 mg/L causing severe fluorosis in children).",
     status: "AI_ANALYZED",
     lat: 23.1765,
     lon: 75.7885,
@@ -332,7 +332,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     completedProjects: 14,
     contactEmail: "civic.innovation@iiti.ac.in",
     website: "https://www.iiti.ac.in",
-    accentColor: "from-blue-600 to-indigo-700",
+    accentColor: "#2d5a43",
   },
   {
     institutionId: 2,
@@ -358,7 +358,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     completedProjects: 9,
     contactEmail: "civictech@sgsits.ac.in",
     website: "https://www.sgsits.ac.in",
-    accentColor: "from-emerald-600 to-teal-700",
+    accentColor: "#15803d",
   },
   {
     institutionId: 3,
@@ -384,7 +384,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     completedProjects: 11,
     contactEmail: "societal.solutions@manit.ac.in",
     website: "https://www.manit.ac.in",
-    accentColor: "from-amber-600 to-orange-700",
+    accentColor: "#b45309",
   },
   {
     institutionId: 4,
@@ -409,7 +409,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     completedProjects: 8,
     contactEmail: "iet.civic@dauniv.ac.in",
     website: "https://www.dauniv.ac.in",
-    accentColor: "from-purple-600 to-indigo-700",
+    accentColor: "#3f3f46",
   },
   {
     institutionId: 5,
@@ -434,7 +434,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     completedProjects: 7,
     contactEmail: "solutions@rgpv.ac.in",
     website: "https://www.rgpv.ac.in",
-    accentColor: "from-cyan-600 to-blue-700",
+    accentColor: "#1e3a8a",
   },
   {
     institutionId: 6,
@@ -459,7 +459,7 @@ export const INSTITUTIONS_DATA: Institution[] = [
     completedProjects: 12,
     contactEmail: "kisan.solutions@jnkvv.org",
     website: "https://www.jnkvv.org",
-    accentColor: "from-lime-600 to-green-700",
+    accentColor: "#166534",
   },
 ];
 
@@ -869,7 +869,7 @@ export const CivicStore = {
       localStorage.setItem(STORAGE_KEYS.CHALLENGES, JSON.stringify(INITIAL_CHALLENGES));
       localStorage.setItem(STORAGE_KEYS.PROJECTS, JSON.stringify(INITIAL_PROJECTS));
       localStorage.setItem(STORAGE_KEYS.LEDGER, JSON.stringify(INITIAL_LEDGER));
-    } catch {}
+    } catch { }
   },
 };
 

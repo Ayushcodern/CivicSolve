@@ -196,7 +196,7 @@ function InstitutionsPage() {
                   <div>
                     <div className="flex items-start justify-between gap-4 pb-4 border-b border-zinc-100">
                       <div>
-                        <span className="font-mono text-[11px] font-medium text-zinc-500 block mb-1">
+                        <span className="text-xs font-semibold text-zinc-600 block mb-1">
                           {TYPE_LABELS[inst.type] || inst.type}
                         </span>
                         <h3 className="text-lg font-semibold text-zinc-950 leading-snug">
@@ -212,7 +212,7 @@ function InstitutionsPage() {
                         <div className="text-2xl font-semibold font-mono tabular-nums text-zinc-950">
                           {inst.activeProjects}
                         </div>
-                        <div className="font-mono text-[11px] text-zinc-500">
+                        <div className="text-xs text-zinc-500">
                           Active pilots
                         </div>
                       </div>
@@ -221,7 +221,7 @@ function InstitutionsPage() {
                     {/* Departments Section */}
                     <div className="pt-4 space-y-3">
                       <div>
-                        <h4 className="font-mono text-[11px] text-zinc-700 font-medium mb-2 flex items-center gap-1.5">
+                        <h4 className="text-xs text-zinc-800 font-semibold mb-2 flex items-center gap-1.5">
                           <BookOpen className="h-3.5 w-3.5 text-zinc-500" />
                           <span>Engaged departments</span>
                         </h4>
@@ -237,7 +237,7 @@ function InstitutionsPage() {
 
                       {/* Capabilities Section */}
                       <div className="pt-2">
-                        <h4 className="font-mono text-[11px] text-zinc-700 font-medium mb-2 flex items-center gap-1.5">
+                        <h4 className="text-xs text-zinc-800 font-semibold mb-2 flex items-center gap-1.5">
                           <FlaskConical className="h-3.5 w-3.5 text-zinc-500" />
                           <span>Specialized lab capabilities</span>
                         </h4>
@@ -245,7 +245,7 @@ function InstitutionsPage() {
                           {inst.capabilities.map((cap, idx) => (
                             <span
                               key={idx}
-                              className="font-mono text-[11px] bg-zinc-50 text-zinc-600 border border-zinc-200 px-2.5 py-0.5 rounded"
+                              className="text-xs bg-zinc-50 text-zinc-700 border border-zinc-200 px-2.5 py-1 rounded-md"
                             >
                               {cap}
                             </span>
@@ -262,7 +262,7 @@ function InstitutionsPage() {
                       className="inline-flex items-center gap-1.5 text-zinc-600 hover:text-zinc-950 transition-colors"
                     >
                       <Mail className="h-3.5 w-3.5 text-zinc-400" />
-                      <span className="font-mono text-[11px]">{inst.contactEmail}</span>
+                      <span className="text-xs font-mono">{inst.contactEmail}</span>
                     </a>
 
                     <Link

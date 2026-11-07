@@ -103,17 +103,17 @@ function ImpactLedgerPage() {
       <div className="border-b border-zinc-200/80 bg-white">
         <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-2 flex items-center justify-between text-xs text-zinc-600">
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-            <span className="font-mono text-[11px] text-zinc-700">
-              Government of Madhya Pradesh · Department of Science & Technology · Public Audit Ledger
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2d5a43]" />
+            <span className="text-xs font-medium text-zinc-700">
+              {t.govBadge} · {lang === "hi" ? "सार्वजनिक असर बही" : "Public Impact Ledger"}
             </span>
           </div>
           <div className="flex items-center gap-4 text-xs">
             <Link to="/" className="text-zinc-600 hover:text-zinc-950 font-medium transition">
-              ← Home
+              ← {t.navHome}
             </Link>
             <Link to="/challenges" className="text-zinc-600 hover:text-zinc-950 font-medium transition">
-              Challenge registry
+              {lang === "hi" ? "समस्या सूची" : "Challenge registry"}
             </Link>
           </div>
         </div>
@@ -142,26 +142,26 @@ function ImpactLedgerPage() {
               {/* Metrics Counter Cards */}
               <div className="grid grid-cols-3 gap-3">
                 <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-2xs text-left">
-                  <div className="font-mono text-[11px] text-zinc-500">
-                    Interventions
+                  <div className="text-xs text-zinc-500 font-medium">
+                    {lang === "hi" ? "सत्यापित कार्य" : "Interventions"}
                   </div>
                   <div className="text-2xl sm:text-3xl font-semibold font-mono tabular-nums text-zinc-950 mt-1">
                     {entries.length}
                   </div>
                 </div>
                 <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-2xs text-left">
-                  <div className="font-mono text-[11px] text-zinc-500">
-                    Beneficiaries
+                  <div className="text-xs text-zinc-500 font-medium">
+                    {lang === "hi" ? "लाभान्वित नागरिक" : "Beneficiaries"}
                   </div>
                   <div className="text-2xl sm:text-3xl font-semibold font-mono tabular-nums text-zinc-950 mt-1">
                     {totalBeneficiaries.toLocaleString("en-IN")}
                   </div>
                 </div>
                 <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-2xs text-left">
-                  <div className="font-mono text-[11px] text-zinc-500">
-                    Audit compliance
+                  <div className="text-xs text-zinc-500 font-medium">
+                    {lang === "hi" ? "भौतिक सत्यापन" : "Field Verified"}
                   </div>
-                  <div className="text-2xl sm:text-3xl font-semibold font-mono tabular-nums text-zinc-950 mt-1">
+                  <div className="text-2xl sm:text-3xl font-semibold font-mono tabular-nums text-[#2d5a43] mt-1">
                     100%
                   </div>
                 </div>
@@ -176,7 +176,11 @@ function ImpactLedgerPage() {
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search ledger by title, university, district, or verifying officer..."
+                  placeholder={
+                    lang === "hi"
+                      ? "शीर्षक, कॉलेज, ज़िला या सत्यापन अधिकारी खोजें..."
+                      : "Search ledger by title, university, district, or verifying officer..."
+                  }
                   className="w-full rounded-lg border border-zinc-300 bg-white pl-10 pr-4 py-2.5 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-zinc-500 shadow-2xs"
                 />
               </div>
