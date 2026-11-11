@@ -17,6 +17,7 @@ import { LanguageProvider } from "../context/LanguageContext";
 import { Toaster } from "../components/ui/sonner";
 import { FullSiteLoader } from "../components/FullSiteLoader";
 import { LoginModal } from "../components/LoginModal";
+import { ChatBot } from "../components/ChatBot";
 
 function NotFoundComponent() {
   return (
@@ -139,6 +140,7 @@ function RootComponent() {
           {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
           <Outlet />
           <Toaster />
+          <ChatBot />
         </LanguageProvider>
       </AuthProvider>
     </QueryClientProvider>

@@ -45,6 +45,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_HOST: postgres-postgis
       POSTGRES_PORT: 5432
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
     depends_on:
       postgres-postgis:
         condition: service_healthy
@@ -88,6 +89,7 @@ services:
       - "5173:5173"
     environment:
       VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api/v1}
+      VITE_AI_SERVICE_URL: ${VITE_AI_SERVICE_URL:-http://localhost:8000}
     volumes:
       - "./dummy frontend/src:/app/src"       # Hot-reload: mount source code
       - "./dummy frontend/public:/app/public" # Hot-reload: mount public assets
