@@ -19,6 +19,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.classify import classifier
 from app.api.classify import router as classify_router
+from app.api.chat import router as chat_router
 from app.api.duplicate import router as duplicate_router
 from app.api.matching import router as matching_router
 from app.api.priority import router as priority_router
@@ -73,6 +74,7 @@ app.add_middleware(
 # ── Routers ──────────────────────────────────────────────────
 
 app.include_router(classify_router, prefix="/api/v1/ai", tags=["AI Classification"])
+app.include_router(chat_router, prefix="/api/v1/ai", tags=["AI Chatbot"])
 app.include_router(duplicate_router, prefix="/api/v1/ai", tags=["AI Duplicate Detection"])
 app.include_router(priority_router, prefix="/api/v1/ai", tags=["AI Priority Scoring"])
 app.include_router(matching_router, prefix="/api/v1/ai", tags=["AI Capability Matching"])
