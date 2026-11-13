@@ -76,21 +76,6 @@ function ChallengesExplorerPage() {
     <div className="min-h-screen bg-[#fbfbfa] text-zinc-950 font-sans antialiased flex flex-col">
       <DashboardNav />
 
-      {/* Official Government Pilot Context Bar */}
-      <div className="border-b border-zinc-200/70 bg-white">
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-2 flex items-center justify-between text-xs text-zinc-600">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-800" />
-            <span className="font-medium text-zinc-700">
-              {t.govBadge}
-            </span>
-          </div>
-          <Link to="/" className="text-zinc-600 hover:text-zinc-950 font-medium transition-colors">
-            ← {t.navHome}
-          </Link>
-        </div>
-      </div>
-
       <main className="flex-1">
         {/* Page Header */}
         <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 pt-8 pb-10 border-b border-zinc-200/70 bg-white">

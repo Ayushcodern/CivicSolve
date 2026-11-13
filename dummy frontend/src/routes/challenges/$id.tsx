@@ -180,7 +180,7 @@ const DEFAULT_DUPLICATES: DuplicateCandidate[] = [
 function ChallengeDetailPage() {
   const { id } = Route.useParams();
   const navigate = useNavigate();
-  const { user, isAuthenticated, login, openLoginModal } = useAuth();
+  const { user, isAuthenticated, openLoginModal } = useAuth();
   const { lang, t, getStatusMeta } = useLanguage();
 
   const [challenge, setChallenge] = useState<ChallengeData | null>(null);
@@ -422,18 +422,6 @@ function ChallengeDetailPage() {
     } finally {
       setAccepting(false);
     }
-  };
-
-  // Quick helper to switch to Faculty Lead account for testing
-  const handleQuickFacultyLogin = () => {
-    login("mock_jwt_faculty_token_789", {
-      userId: 2,
-      name: "Dr. Amit Sharma",
-      email: "amit.sharma@iiti.ac.in",
-      role: "FACULTY",
-      institutionId: 1,
-    });
-    toast.success("Signed in as Dr. Amit Sharma (Faculty Lead, IIT Indore)");
   };
 
   if (loading) {
@@ -747,10 +735,6 @@ function ChallengeDetailPage() {
                       </p>
                     </div>
                   </div>
-
-                  <span className="px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-800 border border-zinc-200 text-[11px] font-mono font-medium">
-                    Verified triage
-                  </span>
                 </div>
 
                 {/* Domain & Sub-domain with Confidence */}
@@ -971,20 +955,6 @@ function ChallengeDetailPage() {
                             </>
                           )}
                         </button>
-
-                        {!isUniversityAffiliated && (
-                          <div className="flex items-center justify-between px-1 pt-1">
-                            <p className="text-[11px] text-zinc-500">
-                              Requires college or faculty account
-                            </p>
-                            <button
-                              onClick={handleQuickFacultyLogin}
-                              className="text-[11px] text-emerald-900 hover:underline font-medium cursor-pointer"
-                            >
-                              Sign in as faculty lead
-                            </button>
-                          </div>
-                        )}
                       </div>
                     )}
                   </div>

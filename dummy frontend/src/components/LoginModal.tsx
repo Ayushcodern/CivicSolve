@@ -11,7 +11,6 @@ import {
   ArrowRight,
   GraduationCap,
   Landmark,
-  UserCheck,
 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { api } from "../lib/api";
@@ -337,20 +336,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           {/* TAB 1: CITIZEN PHONE NUMBER + OTP */}
           {activeTab === "citizen_otp" && (
             <div className="space-y-4">
-              <div className="p-3.5 rounded-2xl bg-emerald-50/70 border border-emerald-200 text-xs sm:text-sm text-emerald-900 space-y-1">
-                <div className="font-bold flex items-center gap-1.5">
-                  <UserCheck className="w-4 h-4 text-emerald-700" />
-                  <span>
-                    {lang === "hi" ? "नागरिकों व किसानों के लिए सरल प्रवेश" : "Simple Login for Citizens & Farmers"}
-                  </span>
-                </div>
-                <p className="text-zinc-600">
-                  {lang === "hi"
-                    ? "कोई पासवर्ड याद रखने की ज़रूरत नहीं। केवल अपना मोबाइल नंबर दर्ज करें।"
-                    : "No password required. Just enter your 10-digit mobile number."}
-                </p>
-              </div>
-
               {!otpSent ? (
                 <form onSubmit={handleSendOtp} className="space-y-4">
                   <div>

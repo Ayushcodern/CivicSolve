@@ -13,7 +13,6 @@ import {
   Users,
   ShieldCheck,
   ChevronRight,
-  PhoneCall,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage, CATEGORIES, STATUS_MAP } from "../context/LanguageContext";
@@ -178,37 +177,12 @@ function IndexPage() {
       {/* Universal Top Navigation */}
       <DashboardNav />
 
-      {/* Official State Banner */}
-      <div className="border-b border-zinc-200/70 bg-white">
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-2 flex items-center justify-between text-xs text-zinc-600">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-800" />
-            <span className="font-medium text-zinc-700">
-              {t.govBadge}
-            </span>
-          </div>
-          <a
-            href="tel:181"
-            className="hidden sm:inline-flex items-center gap-1.5 text-zinc-700 hover:text-zinc-950 transition-colors font-medium"
-          >
-            <PhoneCall className="w-3.5 h-3.5 text-zinc-500" />
-            <span>{t.footerHelpline}</span>
-          </a>
-        </div>
-      </div>
-
       <main className="flex-1">
         {/* ====================================================================
             1. TOP HERO: Headline + Voice intake + Report CTA
             ==================================================================== */}
         <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 pt-12 pb-14 sm:pt-16 sm:pb-20 border-b border-zinc-200/70 bg-white">
           <div className="max-w-4xl space-y-6">
-            {/* Tag / Micro-indicator */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-zinc-100 border border-zinc-200 text-zinc-700 text-xs font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-700" />
-              <span>{t.heroVoiceTag}</span>
-            </div>
-
             {/* Headline */}
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight text-zinc-950 leading-[1.18]">
               {t.heroHeadline}

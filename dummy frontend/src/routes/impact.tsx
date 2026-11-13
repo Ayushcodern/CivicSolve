@@ -47,7 +47,7 @@ const DOMAIN_ICONS: Record<string, any> = {
 };
 
 function ImpactLedgerPage() {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   const [entries, setEntries] = useState<ImpactLedgerEntry[]>(CivicStore.getImpactLedger());
   const [search, setSearch] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("ALL");
@@ -98,26 +98,6 @@ function ImpactLedgerPage() {
     <div className="min-h-screen bg-[#fbfbfa] text-zinc-900 font-sans antialiased flex flex-col">
       {/* Global Navigation */}
       <DashboardNav />
-
-      {/* Official Government Pilot Context Bar */}
-      <div className="border-b border-zinc-200/80 bg-white">
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-2 flex items-center justify-between text-xs text-zinc-600">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#2d5a43]" />
-            <span className="text-xs font-medium text-zinc-700">
-              {t.govBadge} · {lang === "hi" ? "सार्वजनिक असर बही" : "Public Impact Ledger"}
-            </span>
-          </div>
-          <div className="flex items-center gap-4 text-xs">
-            <Link to="/" className="text-zinc-600 hover:text-zinc-950 font-medium transition">
-              ← {t.navHome}
-            </Link>
-            <Link to="/challenges" className="text-zinc-600 hover:text-zinc-950 font-medium transition">
-              {lang === "hi" ? "समस्या सूची" : "Challenge registry"}
-            </Link>
-          </div>
-        </div>
-      </div>
 
       <main className="flex-1">
         {/* Header Section */}
