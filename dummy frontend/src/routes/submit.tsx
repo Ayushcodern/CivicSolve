@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   MapPin,
   Mic,
@@ -82,9 +82,21 @@ function SubmitWizardPage() {
 
   // Web Speech API
   const [isListening, setIsListening] = useState<boolean>(false);
+  const [voiceLang, setVoiceLang] = useState<"hi-IN" | "en-IN">(
+    lang === "hi" ? "hi-IN" : "en-IN"
+  );
+  const [interimText, setInterimText] = useState<string>("");
+  const [speechBlockedNotice, setSpeechBlockedNotice] = useState<boolean>(false);
+  const interimRef = useRef<string>("");
   const recognitionRef = useRef<any>(null);
+  const shouldListenRef = useRef<boolean>(false);
 
-  // Hindi Voice Dictation (Web Speech API, hi-IN default)
+  // Sync voiceLang when UI lang switches
+  useEffect(() => {
+    setVoiceLang(lang === "hi" ? "hi-IN" : "en-IN");
+  }, [lang]);
+
+  // Hindi / English Voice Dictation (Browser-Native Web Speech API)
   const toggleListening = () => {
     const SpeechRecognition =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -92,26 +104,38 @@ function SubmitWizardPage() {
     if (!SpeechRecognition) {
       toast.error(
         lang === "hi"
-          ? "इस ब्राउज़र में आवाज़ पहचान उपलब्ध नहीं है। कृपया लिखकर बताएं या 'उदाहरण भरें' दबाएँ।"
-          : "Web Speech API is not supported in this browser. Please type or tap 'Load Sample'."
+          ? "इस ब्राउज़र में आवाज़ पहचान उपलब्ध नहीं है (Google Chrome या Edge का उपयोग करें)। कृपया लिखकर बताएं।"
+          : "Web Speech API is not supported in this browser (Chrome/Edge recommended). Please type or tap 'Load Sample'."
       );
       return;
     }
 
-    if (isListening) {
+    if (isListening || shouldListenRef.current) {
+      shouldListenRef.current = false;
+      setIsListening(false);
+      // Flush uncommitted interim speech directly into description so it's NEVER lost
+      if (interimRef.current.trim()) {
+        const textToSave = interimRef.current.trim();
+        setDescription((prev) => {
+          const base = prev.trim();
+          return base ? base + " " + textToSave : textToSave;
+        });
+        interimRef.current = "";
+      }
+      setInterimText("");
       if (recognitionRef.current) {
         try {
           recognitionRef.current.stop();
         } catch (_) {}
       }
-      setIsListening(false);
       return;
     }
 
     try {
+      shouldListenRef.current = true;
       const recognition = new SpeechRecognition();
       recognitionRef.current = recognition;
-      recognition.lang = lang === "hi" ? "hi-IN" : "en-IN";
+      recognition.lang = voiceLang;
       recognition.continuous = true;
       recognition.interimResults = true;
 
@@ -119,42 +143,134 @@ function SubmitWizardPage() {
         setIsListening(true);
         toast.info(
           lang === "hi"
-            ? "माइक्रोफ़ोन चालू है... अपनी समस्या बोलिए"
-            : "Microphone active... please describe your problem"
+            ? `माइक्रोफ़ोन चालू है (${voiceLang === "hi-IN" ? "हिन्दी" : "English"})... बोलते रहें`
+            : `Microphone active (${voiceLang === "hi-IN" ? "Hindi" : "English"})... speak now`
         );
       };
 
       recognition.onresult = (event: any) => {
-        let chunk = "";
+        let finalChunk = "";
+        let currentInterim = "";
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          if (event.results[i].isFinal) {
-            chunk += " " + event.results[i][0].transcript;
+          const item = event.results[i];
+          if (item && item[0]) {
+            if (item.isFinal) {
+              finalChunk += " " + item[0].transcript;
+            } else {
+              currentInterim += " " + item[0].transcript;
+            }
           }
         }
-        if (chunk.trim()) {
+        if (finalChunk.trim()) {
           setDescription((prev) => {
             const base = prev.trim();
-            return base ? base + " " + chunk.trim() : chunk.trim();
+            return base ? base + " " + finalChunk.trim() : finalChunk.trim();
           });
+          interimRef.current = "";
+          setInterimText("");
+        } else if (currentInterim.trim()) {
+          interimRef.current = currentInterim.trim();
+          setInterimText(currentInterim.trim());
         }
       };
 
-      recognition.onerror = () => {
+      recognition.onerror = (event: any) => {
+        const errType = event?.error;
+        console.warn("Speech recognition notice:", errType, event);
+        // "no-speech" is a benign browser pause detection, don't abort user's session
+        if (errType === "no-speech") {
+          return;
+        }
+        // Flush any uncommitted speech before error shutdown
+        if (interimRef.current.trim()) {
+          const textToSave = interimRef.current.trim();
+          setDescription((prev) => {
+            const base = prev.trim();
+            return base ? base + " " + textToSave : textToSave;
+          });
+          interimRef.current = "";
+        }
+
+        shouldListenRef.current = false;
         setIsListening(false);
+        setInterimText("");
+
+        if (errType === "not-allowed" || errType === "service-not-allowed") {
+          toast.error(
+            lang === "hi"
+              ? "माइक्रोफ़ोन की अनुमति ब्लॉक है। कृपया Chrome एड्रेस बार में 'localhost:8080' के बाएँ स्थित 🎛️ आइकन दबाकर माइक 'Allow' करें।"
+              : "Microphone blocked. Click the 🎛️ tune icon next to 'localhost:8080' in Chrome and set Microphone to 'Allow'."
+          );
+          return;
+        }
+        if (errType === "network") {
+          setSpeechBlockedNotice(true);
+          toast.error(
+            lang === "hi"
+              ? "ब्राउज़र शील्ड ने आवाज़ पहचान रोक दी (Brave/Edge/School Policy)। कृपया नीचे दिए गए विकल्प चुनें।"
+              : "Speech service blocked (Brave/Edge or School Policy). Please pick a quick sample below or type."
+          );
+          return;
+        }
+        if (errType === "audio-capture") {
+          toast.error(
+            lang === "hi"
+              ? "कोई माइक्रोफ़ोन नहीं मिला या विंडोज़ सेटिंग्स में माइक बंद है।"
+              : "No microphone detected or microphone is disabled in Windows Settings."
+          );
+          return;
+        }
+
+        toast.error(
+          lang === "hi"
+            ? `माइक त्रुटि (${errType || "अज्ञात"}). कृपया 'उदाहरण भरें' दबाएँ या लिखें।`
+            : `Microphone notice (${errType || "unknown"}). Please load a sample or type.`
+        );
       };
 
       recognition.onend = () => {
+        // Automatically sustain listening across natural pauses unless user explicitly toggled off
+        if (shouldListenRef.current) {
+          try {
+            recognition.start();
+            return;
+          } catch (_) {}
+        }
+        // When session ends, flush any remaining interim text
+        if (interimRef.current.trim()) {
+          const textToSave = interimRef.current.trim();
+          setDescription((prev) => {
+            const base = prev.trim();
+            return base ? base + " " + textToSave : textToSave;
+          });
+          interimRef.current = "";
+        }
         setIsListening(false);
+        shouldListenRef.current = false;
+        setInterimText("");
       };
 
       recognition.start();
     } catch {
+      shouldListenRef.current = false;
       setIsListening(false);
+      setInterimText("");
       toast.error(
         lang === "hi" ? "माइक शुरू नहीं हो सका" : "Could not activate microphone"
       );
     }
   };
+
+  useEffect(() => {
+    return () => {
+      shouldListenRef.current = false;
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch (_) {}
+      }
+    };
+  }, []);
 
   // Sample quick complaint
   const handleLoadSample = () => {
@@ -189,6 +305,7 @@ function SubmitWizardPage() {
     ];
 
     const pick = samples[Math.floor(Math.random() * samples.length)];
+    if (!pick) return;
     setSelectedCategory(pick.cat);
     setTitle(pick.title);
     setDescription(pick.desc);
@@ -258,16 +375,50 @@ function SubmitWizardPage() {
       (description.trim().slice(0, 40) + "...") ||
       (lang === "hi" ? "ग्रामीण जन समस्या" : "Community Problem");
 
+    const parsedDistrict = district.split(" ")[0] || "Indore";
+    const villageOrWard =
+      villageName.trim() ||
+      (lang === "hi" ? "ग्राम पंचायत क्षेत्र" : "Gram Panchayat");
+
     try {
       const newRef = Math.floor(Math.random() * 800) + 2620;
+
+      // Attempt live backend API intake if reachable
+      try {
+        const formData = new FormData();
+        const intakePayload = {
+          title: cleanTitle,
+          description: description.trim(),
+          lat: gpsLocation?.lat || 22.9734,
+          lon: gpsLocation?.lon || 75.8322,
+          district: parsedDistrict,
+          villageOrWard: villageOrWard,
+          reportedPopulation: 1500,
+          domain: selectedCategory,
+        };
+        formData.append(
+          "challenge",
+          new Blob([JSON.stringify(intakePayload)], {
+            type: "application/json",
+          })
+        );
+        photos.forEach((photo) => formData.append("photos", photo));
+
+        await api.post("/challenges", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } catch {
+        // Continue with persistent store fallback
+      }
+
       CivicStore.addChallenge({
         challengeId: newRef,
         title: cleanTitle,
         description: description.trim(),
         lat: gpsLocation?.lat || 22.9734,
         lon: gpsLocation?.lon || 75.8322,
-        district: district.split(" ")[0],
-        villageOrWard: villageName.trim() || (lang === "hi" ? "ग्राम पंचायत क्षेत्र" : "Gram Panchayat"),
+        district: parsedDistrict,
+        villageOrWard: villageOrWard,
         reportedPopulation: 1500,
         domain: selectedCategory,
         subDomain: "Community Problem",
@@ -283,7 +434,9 @@ function SubmitWizardPage() {
 
       setComplaintId(newRef);
       setIsSuccess(true);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (typeof window !== "undefined" && typeof window.scrollTo === "function") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
       toast.success(
         lang === "hi"
           ? `शिकायत #MP-CIVIC-${newRef} सफलतापूर्वक दर्ज हुई`
@@ -298,7 +451,7 @@ function SubmitWizardPage() {
     }
   };
 
-  const currentCatMeta = CATEGORIES.find((c) => c.key === selectedCategory) || CATEGORIES[0];
+  const currentCatMeta = CATEGORIES.find((c) => c.key === selectedCategory) ?? CATEGORIES[0]!;
 
   return (
     <div className="min-h-screen bg-[#fbfbfa] text-zinc-900 font-sans antialiased flex flex-col">
@@ -414,7 +567,8 @@ function SubmitWizardPage() {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
               <Link
-                to={`/challenges/${complaintId}`}
+                to="/challenges/$id"
+                params={{ id: String(complaintId) }}
                 className="w-full py-2.5 px-4 rounded-lg bg-[#2d5a43] hover:bg-[#234735] text-white font-medium text-sm text-center transition min-h-[48px] flex items-center justify-center gap-2 shadow-xs"
               >
                 <span>{lang === "hi" ? "शिकायत की पूरी फ़ाइल देखें" : "View problem details"}</span>
@@ -573,15 +727,119 @@ function SubmitWizardPage() {
                       </>
                     )}
                   </button>
+                  {/* Speech Language Switcher */}
+                  <div className="flex items-center justify-center gap-1.5 pt-1">
+                    <span className="text-[11px] text-zinc-500 font-medium">
+                      {lang === "hi" ? "बोलने की भाषा:" : "Speech Language:"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setVoiceLang("hi-IN")}
+                      className={`px-2 py-0.5 rounded text-[11px] font-medium transition cursor-pointer ${
+                        voiceLang === "hi-IN"
+                          ? "bg-[#2d5a43] text-white shadow-2xs"
+                          : "bg-zinc-200/80 text-zinc-700 hover:bg-zinc-300"
+                      }`}
+                    >
+                      🇮🇳 हिन्दी (hi-IN)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setVoiceLang("en-IN")}
+                      className={`px-2 py-0.5 rounded text-[11px] font-medium transition cursor-pointer ${
+                        voiceLang === "en-IN"
+                          ? "bg-[#2d5a43] text-white shadow-2xs"
+                          : "bg-zinc-200/80 text-zinc-700 hover:bg-zinc-300"
+                      }`}
+                    >
+                      🌐 English (en-IN)
+                    </button>
+                  </div>
+
                   <div className="text-xs text-zinc-500 font-normal">
                     {isListening
                       ? lang === "hi"
-                        ? "माइक्रोफ़ोन चालू है। बोलने के बाद फिर दबाएं।"
-                        : "Recording... tap again to stop"
+                        ? `माइक्रोफ़ोन चालू है (${voiceLang === "hi-IN" ? "हिन्दी" : "English"})। बोलने के बाद फिर दबाएं।`
+                        : `Recording in ${voiceLang === "hi-IN" ? "Hindi" : "English"}... tap again to stop`
                       : lang === "hi"
-                      ? "हिंदी में बोलने के लिए ऊपर हरे बटन को दबाएँ"
-                      : "Tap the green button above to dictate in Hindi / English"}
+                      ? `बोलने के लिए ऊपर बटन दबाएँ (${voiceLang === "hi-IN" ? "हिन्दी" : "English"} चयनित)`
+                      : `Tap the green button above to dictate (${voiceLang === "hi-IN" ? "Hindi" : "English"} selected)`}
                   </div>
+
+                  {speechBlockedNotice && (
+                    <div className="p-3.5 rounded-lg bg-amber-50/90 border border-amber-200 text-left text-xs text-amber-950 space-y-2 animate-in fade-in">
+                      <div className="flex items-center gap-2 font-semibold text-amber-900">
+                        <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                        <span>
+                          {lang === "hi"
+                            ? "Brave / Edge शील्ड द्वारा आवाज़ पहचान रोक दी गई"
+                            : "Browser Shield Blocking Voice Recognition"}
+                        </span>
+                      </div>
+                      <p className="text-zinc-600 leading-relaxed">
+                        {lang === "hi"
+                          ? "Brave और Edge ब्राउज़र प्राइवेसी शील्ड के कारण Google Speech API को डिफ़ॉल्ट रूप से ब्लॉक करते हैं। इसे हल करने के 2 आसान तरीके:"
+                          : "Brave and Edge block cloud speech recognition APIs by default. Two easy ways to proceed:"}
+                      </p>
+                      <ul className="list-disc list-inside space-y-1 text-zinc-700 pl-1">
+                        <li>
+                          <strong>Google Chrome</strong> {lang === "hi" ? "ब्राउज़र में खोलें (जहाँ यह सीधे काम करता है)" : "open in Google Chrome (native support)"}
+                        </li>
+                        <li>
+                          {lang === "hi"
+                            ? "या नीचे दिए गए त्वरित नमूनों पर टैप करके तुरंत शिकायत भरें:"
+                            : "Or tap a quick sample below to fill automatically:"}
+                        </li>
+                      </ul>
+                      <div className="flex flex-wrap gap-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedCategory("WATER");
+                            setDescription(
+                              lang === "hi"
+                                ? "हमारे गाँव के मेन चौराहे का हैंडपंप पिछले एक हफ़्ते से बहुत गंदा पानी दे रहा है। बच्चे बीमार पड़ रहे हैं।"
+                                : "Main village handpump is yielding contaminated turbid water for over a week."
+                            );
+                            setSpeechBlockedNotice(false);
+                          }}
+                          className="px-2.5 py-1.5 rounded-md bg-white border border-amber-300 text-zinc-900 font-medium hover:bg-amber-100/60 cursor-pointer shadow-2xs"
+                        >
+                          💧 {lang === "hi" ? "हैंडपंप का गंदा पानी" : "Handpump Water"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedCategory("ROAD_INFRASTRUCTURE");
+                            setDescription(
+                              lang === "hi"
+                                ? "गाँव से मुख्य सड़क को जोड़ने वाली पुलिया धंस गई है। ट्रैक्टर व एम्बुलेंस नहीं आ पा रहे हैं।"
+                                : "The small culvert bridge connecting our village to the main road has collapsed."
+                            );
+                            setSpeechBlockedNotice(false);
+                          }}
+                          className="px-2.5 py-1.5 rounded-md bg-white border border-amber-300 text-zinc-900 font-medium hover:bg-amber-100/60 cursor-pointer shadow-2xs"
+                        >
+                          🛣️ {lang === "hi" ? "पुलिया / सड़क टूटी" : "Broken Culvert / Road"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedCategory("AGRICULTURE");
+                            setDescription(
+                              lang === "hi"
+                                ? "हमारे खेतों में सोयाबीन की पत्तियों पर अज्ञात कीट लग गया है जिससे फ़सल सूख रही है।"
+                                : "Pest attack on soybean crops across 20+ farms. Leaves are yellowing rapidly."
+                            );
+                            setSpeechBlockedNotice(false);
+                          }}
+                          className="px-2.5 py-1.5 rounded-md bg-white border border-amber-300 text-zinc-900 font-medium hover:bg-amber-100/60 cursor-pointer shadow-2xs"
+                        >
+                          🌾 {lang === "hi" ? "फ़सल में कीट" : "Crop Pest Attack"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Description Textarea */}
@@ -609,6 +867,12 @@ function SubmitWizardPage() {
                     }
                     className="w-full p-3.5 rounded-lg border border-zinc-300 text-sm sm:text-base text-zinc-950 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-400 outline-none leading-relaxed"
                   />
+                  {interimText && (
+                    <div className="mt-1.5 p-2.5 rounded-lg bg-emerald-50/90 border border-emerald-200 text-xs text-emerald-900 flex items-center gap-2 animate-in fade-in">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse shrink-0" />
+                      <span className="italic">"{interimText}..."</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Optional Title */}
@@ -857,7 +1121,9 @@ function SubmitWizardPage() {
                   <div className="flex items-center justify-between pb-2.5 border-b border-zinc-200 text-xs sm:text-sm">
                     <span className="text-zinc-500 font-medium">{t.stepCat}</span>
                     <span className="font-semibold text-zinc-950">
-                      {lang === "hi" ? currentCatMeta.nameHi : currentCatMeta.nameEn}
+                      {lang === "hi"
+                        ? currentCatMeta?.nameHi ?? "समस्या"
+                        : currentCatMeta?.nameEn ?? "Problem"}
                     </span>
                   </div>
 
@@ -925,4 +1191,5 @@ function SubmitWizardPage() {
   );
 }
 
+export { SubmitWizardPage, SubmitWizardPage as SubmitChallengePage };
 export default SubmitWizardPage;
