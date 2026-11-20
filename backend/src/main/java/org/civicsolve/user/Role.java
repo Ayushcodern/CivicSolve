@@ -6,6 +6,8 @@ package org.civicsolve.user;
  */
 public enum Role {
     CITIZEN,
+    STUDENT,
+    FACULTY,
     UNIVERSITY,
     INDUSTRY,
     GOVT,

@@ -1,6 +1,6 @@
 package org.civicsolve;
 
-import org.civicsolve.ai.dto.AiClassificationResponse;
+import org.civicsolve.ai.dto.AiClassifyResponse;
 import org.civicsolve.ai.dto.AiDuplicateResponse;
 import org.civicsolve.ai.dto.AiMatchResponse;
 import org.civicsolve.ai.dto.AiPriorityResponse;
@@ -171,7 +171,7 @@ public class Table5AutomatedTestMatrixTest {
     @Test
     @DisplayName("TC04: AI classification categorizes 'Handpump broken in school' to 'Water Supply'")
     void testTC04_AiClassificationCategorizesHandpumpToWaterSupply() {
-        AiClassificationResponse response = AiClassificationResponse.builder()
+        AiClassifyResponse response = AiClassifyResponse.builder()
                 .domain("Water Supply")
                 .subDomain("Handpump & Borewell Maintenance")
                 .confidence(0.96)
@@ -193,7 +193,7 @@ public class Table5AutomatedTestMatrixTest {
                 .id(2611L)
                 .title("School handpump not working, no drinking water")
                 .similarity(0.85)
-                .distance(0.25)
+                .distanceKm(0.25)
                 .build();
 
         AiDuplicateResponse response = AiDuplicateResponse.builder()
@@ -204,7 +204,7 @@ public class Table5AutomatedTestMatrixTest {
         assertNotNull(response.getMatches());
         assertEquals(1, response.getMatches().size());
         assertTrue(response.getMatches().get(0).getSimilarity() >= 0.75, "Similarity must be >= 0.75");
-        assertTrue(response.getMatches().get(0).getDistance() <= 5.0, "Distance within 5km");
+        assertTrue(response.getMatches().get(0).getDistanceKm() <= 5.0, "Distance within 5km");
     }
 
     // =========================================================================
@@ -241,20 +241,20 @@ public class Table5AutomatedTestMatrixTest {
     @DisplayName("TC07: University recommendation returns ranked list with match % and distance")
     void testTC07_UniversityRecommendationReturnsRankedList() {
         AiMatchResponse.MatchedInstitution inst1 = AiMatchResponse.MatchedInstitution.builder()
-                .id(1L)
+                .institutionId(1L)
                 .name("IIT Indore - Water Quality Lab")
                 .type("UNIVERSITY")
                 .matchPercentage(96.0)
-                .distance(14.2)
+                .distanceKm(14.2)
                 .matchReasons(List.of("Water spectrometry equipment", "Active faculty research"))
                 .build();
 
         AiMatchResponse.MatchedInstitution inst2 = AiMatchResponse.MatchedInstitution.builder()
-                .id(2L)
+                .institutionId(2L)
                 .name("SGSITS Indore - Civil Dept")
                 .type("UNIVERSITY")
                 .matchPercentage(92.0)
-                .distance(18.5)
+                .distanceKm(18.5)
                 .matchReasons(List.of("Filtration testbed"))
                 .build();
 
@@ -299,7 +299,7 @@ public class Table5AutomatedTestMatrixTest {
         ModeratorAudit savedAudit = auditCaptor.getValue();
         assertEquals(challengeId, savedAudit.getChallengeId());
         assertEquals(4L, savedAudit.getModeratorId());
-        assertEquals("VALIDATE", savedAudit.getAction());
+        assertEquals(ModerationAction.VALIDATE, savedAudit.getAction());
         assertEquals("Ground reality verified by field officer.", savedAudit.getReason());
     }
 

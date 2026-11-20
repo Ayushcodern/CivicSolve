@@ -46,4 +46,25 @@ public class User {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private OffsetDateTime createdAt;
+
+    @Transient
+    private String fullName;
+
+    public String getFullName() {
+        return name != null ? name : fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.name = fullName;
+        this.fullName = fullName;
+    }
+
+    public String getName() {
+        return name != null ? name : fullName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        this.fullName = name;
+    }
 }

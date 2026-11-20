@@ -65,9 +65,9 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
      * Dynamic paginated query matching any combination of domain, status, and district.
      */
     @Query("SELECT c FROM Challenge c WHERE " +
-           "(:domain IS NULL OR LOWER(c.domain) = LOWER(:domain)) AND " +
+           "(CAST(:domain AS string) IS NULL OR LOWER(c.domain) = LOWER(CAST(:domain AS string))) AND " +
            "(:status IS NULL OR c.status = :status) AND " +
-           "(:district IS NULL OR LOWER(c.district) = LOWER(:district))")
+           "(CAST(:district AS string) IS NULL OR LOWER(c.district) = LOWER(CAST(:district AS string)))")
     Page<Challenge> findWithFilters(
             @Param("domain") String domain,
             @Param("status") ChallengeStatus status,

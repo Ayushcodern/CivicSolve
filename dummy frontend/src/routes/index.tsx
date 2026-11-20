@@ -231,12 +231,7 @@ function IndexPage() {
                 <ArrowRight className="w-4 h-4 text-emerald-200" />
               </Link>
 
-              <Link
-                to="/challenges"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-white border border-zinc-300 hover:bg-zinc-50 text-zinc-800 text-sm sm:text-base font-medium shadow-2xs transition-colors cursor-pointer min-h-[48px]"
-              >
-                <span>{lang === "hi" ? "दर्ज समस्याएँ देखें" : "Browse Problems"}</span>
-              </Link>
+
             </div>
 
             {/* Search Bar */}
@@ -305,101 +300,7 @@ function IndexPage() {
           </div>
         </section>
 
-        {/* ====================================================================
-            3. PROBLEMS NEAR YOU: Simple, Clear Cards
-            ==================================================================== */}
-        <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 py-12 sm:py-16 border-b border-zinc-200/70 bg-white">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-semibold text-zinc-950 tracking-tight">
-                {t.nearTitle}
-              </h2>
-              <p className="text-sm text-zinc-600 mt-1">
-                {t.nearSub}
-              </p>
-            </div>
-            <Link
-              to="/challenges"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-emerald-900 hover:underline transition-colors"
-            >
-              <span>{t.viewAllProblems}</span>
-            </Link>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {NEARBY_PROBLEMS.map((item) => {
-              const status = getStatusMeta(item.statusKey);
-              const StatusIcon = status.icon;
-
-              return (
-                <Link
-                  key={item.id}
-                  to={`/challenges/${item.numericId}`}
-                  className="rounded-xl border border-zinc-200 bg-white hover:border-zinc-300 p-5 shadow-2xs hover:shadow-xs transition-colors flex flex-col justify-between cursor-pointer group"
-                >
-                  <div className="space-y-3">
-                    {/* Top Row: Ref number & Status Badge */}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-mono text-xs font-semibold text-zinc-600">
-                        #{item.id}
-                      </span>
-                      <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-medium border ${status.badgeClass}`}
-                      >
-                        <StatusIcon className="w-3.5 h-3.5 text-zinc-600" />
-                        <span>{lang === "hi" ? status.labelHi : status.labelEn}</span>
-                      </span>
-                    </div>
-
-                    {/* Problem Title */}
-                    <h3 className="text-base font-semibold text-zinc-950 leading-snug group-hover:text-emerald-900 transition-colors">
-                      {lang === "hi" ? item.titleHi : item.titleEn}
-                    </h3>
-
-                    {/* Location & Beneficiaries */}
-                    <div className="flex items-center justify-between text-xs text-zinc-600 pt-1">
-                      <div className="flex items-center gap-1 font-medium text-zinc-800">
-                        <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                        <span>{lang === "hi" ? item.placeHi : item.placeEn}</span>
-                      </div>
-                      <div className="flex items-center gap-1 text-zinc-500 font-normal">
-                        <Users className="w-3.5 h-3.5 text-zinc-400" />
-                        <span>{item.beneficiaries}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Bottom: Urgency & College Partner */}
-                  <div className="pt-4 mt-4 border-t border-zinc-100 space-y-2">
-                    {/* Urgency Progress */}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-zinc-500 font-normal">
-                        {lang === "hi" ? "ज़रूरत स्तर:" : "Urgency level:"}
-                      </span>
-                      <span className="font-medium text-zinc-900 font-mono tabular-nums">
-                        {item.urgency}/100
-                      </span>
-                    </div>
-                    <div className="h-1.5 w-full bg-zinc-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-zinc-700"
-                        style={{ width: `${item.urgency}%` }}
-                      />
-                    </div>
-
-                    {/* Assigned College */}
-                    <div className="pt-1 flex items-center gap-1.5 text-xs text-zinc-700 bg-zinc-50 border border-zinc-200/80 px-2.5 py-1 rounded-md font-normal truncate">
-                      <GraduationCap className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
-                      <span className="truncate">
-                        {lang === "hi" ? item.collegeHi : item.collegeEn}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
 
         {/* ====================================================================
             4. 3-STEP EXPLAINER: बताइए -> जाँच -> समाधान

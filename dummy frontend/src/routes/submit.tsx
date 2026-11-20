@@ -26,6 +26,8 @@ import { CivicStore } from "../lib/store";
 import { useLanguage, CATEGORIES } from "../context/LanguageContext";
 import { DashboardNav } from "../components/DashboardNav";
 import { Footer } from "../components/Footer";
+import { ProtectedRoute } from "../components/ProtectedRoute";
+import { useAuth } from "../context/AuthContext";
 
 export const Route = createFileRoute("/submit")({
   head: () => ({
@@ -59,7 +61,17 @@ const MP_DISTRICTS = [
 
 function SubmitWizardPage() {
   const { lang, t } = useLanguage();
+  const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Gate: show login prompt if not authenticated
+  if (!user) {
+    return (
+      <ProtectedRoute>
+        <></>
+      </ProtectedRoute>
+    );
+  }
 
   // 1 question per screen: 1=Category, 2=Description, 3=Photo, 4=Location, 5=Confirm
   const [step, setStep] = useState<number>(1);

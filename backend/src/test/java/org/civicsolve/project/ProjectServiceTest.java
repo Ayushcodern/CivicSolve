@@ -72,7 +72,6 @@ class ProjectServiceTest {
 
         when(challengeRepository.findById(challengeId)).thenReturn(Optional.of(challenge));
         when(projectRepository.existsByChallengeId(challengeId)).thenReturn(false);
-        when(userRepository.findByEmail("faculty@aitr.ac.in")).thenReturn(Optional.of(facultyUser));
         when(userRepository.existsById(2L)).thenReturn(true);
         when(institutionRepository.findById(1L)).thenReturn(Optional.of(institution));
 
